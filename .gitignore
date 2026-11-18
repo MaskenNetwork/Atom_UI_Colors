@@ -1,5 +1,25 @@
+# Generated packages, toolchains and verification artifacts.
 node_modules/
 *.vsix
 *.log
+__pycache__/
+.release/
+.release-tools/
+.store-preview/
+
+# Local recovery data and editor/account configuration.
+backups/
+installation-state.json
+.vscode/
+.codex/
+.agents/
+.aws/
+
+# Local publishing records and helper tools; not extension sources.
+/store-assets/
+/tools/
+/PROMPT-NUOVA-CHAT.md
+/LEGGIMI-LOCALE.md
+
 .DS_Store
 Thumbs.db
