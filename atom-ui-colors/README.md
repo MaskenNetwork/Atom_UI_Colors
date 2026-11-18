@@ -7,7 +7,7 @@ with explicit theme-color fallbacks. Extension view logos use colors extracted
 from their own SVGs. File and folder icon themes remain entirely independent.
 This project is not affiliated with AtomMaterialUI or Microsoft.
 
-![VS Code Explorer and editor with Atom UI Colors](media/screenshots/01-workspace.png)
+![VS Code Explorer and editor with Atom UI Colors](https://raw.githubusercontent.com/MaskenNetwork/Atom_UI_Colors/main/atom-ui-colors/media/screenshots/01-workspace.png)
 
 ## A little color, right where you work
 
@@ -18,9 +18,9 @@ This project is not affiliated with AtomMaterialUI or Microsoft.
 - **Your palette.** Override individual icon colors with simple `#RRGGBB` settings.
 - **An easy way back.** Restore the previous appearance with a dedicated command.
 
-![Search and result controls with their native shapes and Atom Material colors](media/screenshots/02-search.png)
+![Search and result controls with their native shapes and Atom Material colors](https://raw.githubusercontent.com/MaskenNetwork/Atom_UI_Colors/main/atom-ui-colors/media/screenshots/02-search.png)
 
-![Atom UI Colors customization in VS Code Settings](media/screenshots/03-settings.png)
+![Atom UI Colors customization in VS Code Settings](https://raw.githubusercontent.com/MaskenNetwork/Atom_UI_Colors/main/atom-ui-colors/media/screenshots/03-settings.png)
 
 **Desktop VS Code only: Windows, macOS and Linux.** The extension uses app-relative
 paths and Node's platform APIs; it does not run PowerShell, Bash, AppleScript or
