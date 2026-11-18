@@ -1,0 +1,6 @@
+{
+  "source": "AtomMaterialUI/a-file-icon-idea",
+  "pluginVersion": "210.0.2",
+  "coloredIconIds": 775,
+  "method": "Most frequent explicit SVG fill/stroke; first color on ties. Multicolor icons are represented by one color. Forms are native VS Code."
+}

@@ -1,0 +1,38 @@
+name: Atom UI Colors
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  lifecycle:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: atom-ui-colors
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test
+      - run: node scripts/package.cjs
+  marketplace-package:
+    needs: lifecycle
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: atom-ui-colors
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npx --yes @vscode/vsce@4.1.1 package --no-dependencies --out ../atom-ui-colors-marketplace.vsix
+      - uses: actions/upload-artifact@v4
+        with:
+          name: atom-ui-colors-marketplace
+          path: atom-ui-colors-marketplace.vsix
+          if-no-files-found: error

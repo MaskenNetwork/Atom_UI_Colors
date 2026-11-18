@@ -1,0 +1,64 @@
+{
+  "name": "atom-ui-colors",
+  "displayName": "Atom UI Colors",
+  "description": "Keep VS Code's native UI icons and give them the Atom Material color palette. File icons stay independent.",
+  "publisher": "maskennetwork",
+  "author": { "name": "MaskenNetwork" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MaskenNetwork/Atom_UI_Colors.git",
+    "directory": "atom-ui-colors"
+  },
+  "bugs": { "url": "https://github.com/MaskenNetwork/Atom_UI_Colors/issues" },
+  "homepage": "https://github.com/MaskenNetwork/Atom_UI_Colors#readme",
+  "vsce": {
+    "baseContentUrl": "https://github.com/MaskenNetwork/Atom_UI_Colors/blob/main/atom-ui-colors/",
+    "baseImagesUrl": "https://raw.githubusercontent.com/MaskenNetwork/Atom_UI_Colors/main/atom-ui-colors/"
+  },
+  "version": "0.1.2",
+  "preview": true,
+  "icon": "media/icon.png",
+  "galleryBanner": { "color": "#171c25", "theme": "dark" },
+  "pricing": "Free",
+  "engines": { "vscode": "^1.93.0" },
+  "categories": ["Themes", "Other"],
+  "keywords": ["icons", "codicons", "colors", "atom", "material", "ui"],
+  "license": "MIT",
+  "main": "./src/extension.cjs",
+  "extensionKind": ["ui"],
+  "extensionDependencies": ["be5invis.vscode-custom-css"],
+  "activationEvents": ["onStartupFinished"],
+  "capabilities": { "untrustedWorkspaces": { "supported": true }, "virtualWorkspaces": { "supported": false } },
+  "scripts": {
+    "test": "node --test test/*.test.cjs",
+    "package": "node scripts/package.cjs",
+    "vscode:uninstall": "node ./src/uninstall.cjs"
+  },
+  "contributes": {
+    "commands": [
+      { "command": "atomUIColors.apply", "title": "Atom UI Colors: Apply / Repair Colors" },
+      { "command": "atomUIColors.restore", "title": "Atom UI Colors: Restore Previous Appearance" },
+      { "command": "atomUIColors.openFolder", "title": "Atom UI Colors: Open Generated CSS Folder" },
+      { "command": "atomUIColors.status", "title": "Atom UI Colors: Show Status" }
+    ],
+    "configuration": [
+      {
+        "id": "general.atomUIColors",
+        "title": "General",
+        "order": 1,
+        "properties": {
+          "atomUIColors.enabled": { "type": "boolean", "default": true, "scope": "machine", "description": "Apply the colors automatically. Turning this off restores this extension's changes." }
+        }
+      },
+      {
+        "id": "palette.atomUIColors",
+        "title": "Icon Colors",
+        "order": 2,
+        "properties": {
+          "atomUIColors.colors": { "type": "object", "default": {}, "scope": "machine", "order": 1, "additionalProperties": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }, "description": "Optional icon ID to #RRGGBB overrides, for example {\"search\": \"#80CBC4\"}." },
+          "atomUIColors.viewColors": { "type": "object", "default": {}, "scope": "machine", "order": 2, "additionalProperties": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }, "description": "Optional extension view ID to #RRGGBB colors for SVG mask icons." }
+        }
+      }
+    ]
+  }
+}
