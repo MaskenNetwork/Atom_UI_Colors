@@ -220,7 +220,7 @@ node --test
 node scripts/package.cjs
 ```
 
-The package is written to `../atom-ui-colors-0.1.2.vsix`. Only `src`, `assets`,
+The package is written to `../atom-ui-colors-0.1.3.vsix`. Only `src`, `assets`,
 `media`, `vendor`, manifest, notices and documentation are distributed. Tests, personal
 paths, recovery snapshots, old SVG assets and local browser profiles are excluded.
 
