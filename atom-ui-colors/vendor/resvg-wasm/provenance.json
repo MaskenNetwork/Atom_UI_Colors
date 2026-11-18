@@ -1,0 +1,13 @@
+{
+  "package": "@resvg/resvg-wasm",
+  "version": "2.6.2",
+  "license": "MPL-2.0",
+  "source": "https://github.com/yisibl/resvg-js/tree/v2.6.2",
+  "archive": "https://registry.npmjs.org/@resvg/resvg-wasm/-/resvg-wasm-2.6.2.tgz",
+  "archiveSha256": "ff51acbb5ee0074601b75c3bea9226a18d346752af787f6d2d3adcdd98493d71",
+  "archiveIntegrity": "sha512-FqALmHI8D4o6lk/LRWDnhw95z5eO+eAa6ORjVg09YRR7BkcM6oPHU9uyC0gtQG5vpFLvgpeU4+zEAz2H8APHNw==",
+  "unmodifiedFiles": {
+    "index.js": "0c1cd17c478a10ad891b147808c4f27b1023216f7726c49528c22c310c83ee6c",
+    "index_bg.wasm": "22bf6e9f9a100d972da0411a69c5ba504367fc1fa87b3b64e3f35e53926d2d70"
+  }
+}

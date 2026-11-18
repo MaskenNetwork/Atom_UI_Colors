@@ -1,0 +1,6 @@
+test/**
+scripts/**
+.vscode/**
+.github/**
+**/*.vsix
+**/*.log
