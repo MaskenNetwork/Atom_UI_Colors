@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.3
+
+- Publish the prepared Marketplace metadata with the public author name MaskenNetwork, GitHub source and issue links, and HTTPS screenshot URLs.
+- Keep the runtime, palette, native icon sizes and behavior unchanged from 0.1.2.
+
 ## 0.1.2
 
 - Preserve the native 16px SVG drawing size inside padded toolbar buttons instead of enlarging masks to the full button box.
