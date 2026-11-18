@@ -30,6 +30,7 @@ are excluded from Git. Keep recovery data until it is no longer needed.
 
 Version 0.1.3 carries the prepared Marketplace metadata: the public author name
 **MaskenNetwork**, GitHub source and issue links, and HTTPS screenshot URLs.
+It also removes the Marketplace Preview label.
 The first public 0.1.2 package used the earlier local packaging metadata.
 The runtime, palette, icon sizes and behavior are unchanged from 0.1.2.
 

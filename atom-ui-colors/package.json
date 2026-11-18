@@ -16,7 +16,7 @@
     "baseImagesUrl": "https://raw.githubusercontent.com/MaskenNetwork/Atom_UI_Colors/main/atom-ui-colors/"
   },
   "version": "0.1.3",
-  "preview": true,
+  "preview": false,
   "icon": "media/icon.png",
   "galleryBanner": { "color": "#171c25", "theme": "dark" },
   "pricing": "Free",

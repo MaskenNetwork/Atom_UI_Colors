@@ -2,6 +2,7 @@
 
 ## 0.1.3
 
+- Remove the Marketplace Preview label and use explicit HTTPS screenshot URLs in the source README.
 - Publish the prepared Marketplace metadata with the public author name MaskenNetwork, GitHub source and issue links, and HTTPS screenshot URLs.
 - Keep the runtime, palette, native icon sizes and behavior unchanged from 0.1.2.
 
