@@ -19,7 +19,7 @@ const application=require('../src/application.cjs');
 const workbench=require('../src/workbench.cjs');
 const baselines=require('../assets/workbench-baselines.json');
 // Exercise the same fixture on CI hosts, without claiming a verified desktop
-// distribution for that host. Production accepts only the pinned identities.
+// distribution for that host. These fixtures exercise checksum verification.
 const baseline=baselines.builds.find(b=>b.platform===process.platform && b.arch===process.arch)??{...baselines.builds[0],platform:process.platform,arch:process.arch};
 if(!baselines.builds.some(b=>b.platform===baseline.platform && b.arch===baseline.arch)) baselines.builds.push(baseline);
 function harness(t,{initial='// personal settings\n{\n  "workbench.iconTheme": "material-icon-theme", // keep this\n}\n',folder='electron-browser/workbench',hook}={}) {
@@ -83,6 +83,68 @@ test('apply and restore support an application root reached through a directory 
   assert(fs.readFileSync(h.htmlPath,'utf8').includes('ATOM-UI-COLORS:BEGIN'));
   await h.controller.restore();
   assert.equal(fs.readFileSync(h.htmlPath,'utf8'),h.original);
+});
+
+function useUnbundledBuild(h,html=h.original) {
+  const productPath=path.join(h.appRoot,'product.json'),product=storage.readJSON(productPath);
+  product.commit='a'.repeat(40);
+  product.checksums={[path.relative(h.appRoot,h.htmlPath).replaceAll('\\','/').replace(/^out\//,'')]:Buffer.from(workbench.digest(html),'hex').toString('base64').replace(/=+$/,'')};
+  storage.writeJSON(productPath,product);
+  storage.writeJSON(path.join(h.appRoot,'package.json'),{version:'1.146.0'});
+  fs.writeFileSync(h.htmlPath,html);
+}
+
+test('an unbundled build verifies its original file and preserves CSP through apply, reapply and uninstall',async t=>{
+  const h=harness(t);useUnbundledBuild(h);
+  assert((await h.controller.apply()).changed);
+  const colored=fs.readFileSync(h.htmlPath,'utf8');
+  assert.deepEqual(workbench.policies(colored).meta.map(t=>t.raw),workbench.policies(h.original).meta.map(t=>t.raw));
+  assert.equal((await h.controller.apply()).changed,false);
+  const foreign='<style>.foreign {color:blue}</style>';
+  fs.writeFileSync(h.htmlPath,colored.replace('</head>',foreign+'</head>'));
+  assert.equal((await h.controller.apply()).changed,false);
+  await uninstall(h.controller.paths.base,path.dirname(h.context.extensionPath));
+  assert.equal(fs.readFileSync(h.htmlPath,'utf8'),h.original.replace('</head>',foreign+'</head>'));
+  assert.equal(fs.readFileSync(h.settingsPath,'utf8'),h.initial);
+});
+
+test('an unbundled build supports other workbench layouts and directory links',async t=>{
+  const h=harness(t),htmlPath=path.join(h.appRoot,'out/vs/code/electron-sandbox/workbench.html');
+  fs.mkdirSync(path.dirname(htmlPath),{recursive:true});fs.renameSync(h.htmlPath,htmlPath);h.htmlPath=htmlPath;
+  useUnbundledBuild(h);
+  const linkedRoot=path.join(h.root,'linked-app');
+  fs.symlinkSync(h.appRoot,linkedRoot,process.platform==='win32'?'junction':'dir');h.vscode.env.appRoot=linkedRoot;
+  assert((await h.controller.apply()).changed);
+  assert.equal((await h.controller.apply()).changed,false);
+  await h.controller.restore();assert.equal(fs.readFileSync(htmlPath,'utf8'),h.original);
+});
+
+test('unbundled builds reject modified files, missing checksums and incompatible CSP without writes',async t=>{
+  for(const scenario of ['modified','missing-checksum','missing-CSP','restricted-CSP','legacy-patch']) {
+    await t.test(scenario,async t=>{
+      const h=harness(t);useUnbundledBuild(h);
+      if(scenario==='modified')fs.appendFileSync(h.htmlPath,'<!-- unverified edit -->');
+      if(scenario==='missing-checksum')storage.writeJSON(path.join(h.appRoot,'product.json'),{commit:'a'.repeat(40)});
+      if(scenario==='missing-CSP')useUnbundledBuild(h,'<html><head></head><body></body></html>');
+      if(scenario==='restricted-CSP')useUnbundledBuild(h,h.original.replace("'unsafe-inline'","'none'"));
+      if(scenario==='legacy-patch')fs.writeFileSync(h.htmlPath,legacyHTML(h,''));
+      const before=fs.readFileSync(h.htmlPath,'utf8');
+      await assert.rejects(h.controller.apply(),/no verified CSP baseline|CSP|policy/);
+      assert.equal(fs.readFileSync(h.htmlPath,'utf8'),before);
+      assert.equal(fs.readFileSync(h.settingsPath,'utf8'),h.initial);
+      assert(!fs.existsSync(h.controller.paths.cssPath));assert(!h.controller.getState());
+    });
+  }
+});
+
+test('saved originals for unbundled builds are reverified before reapply and restore',async t=>{
+  const h=harness(t);useUnbundledBuild(h);await h.controller.apply();
+  const file=h.controller.getState().appStatePaths[0],saved=storage.readJSON(file);
+  saved.baseline+='<!-- damaged recovery -->';storage.writeJSON(file,saved);
+  const before=fs.readFileSync(h.htmlPath,'utf8');
+  await assert.rejects(h.controller.apply(),/no verified CSP baseline/);
+  await assert.rejects(h.controller.restore(),/no verified CSP baseline/);
+  assert.equal(fs.readFileSync(h.htmlPath,'utf8'),before);assert(h.controller.getState().active);
 });
 
 test('Atom UI Colors settings drive Codicon and view overrides and survive restore',async t=>{

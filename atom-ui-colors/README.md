@@ -49,7 +49,13 @@ Set `atomUIColors.enabled` to `false`, then **Reload Window**, to turn the color
 
 ## Requirements
 
-- Official desktop VS Code writable by your user.
+- Desktop VS Code **1.93.0 or newer**, in an installation writable by your user.
+
+Compatible builds are verified against their original workbench checksum;
+support is not restricted to one specific VS Code release. The original CSP
+must allow the generated styles. Builds with incompatible policies or application
+files modified by other tools may require restoring the original VS Code files
+before applying colors.
 
 The original Content Security Policy is preserved. Colors are shared by windows
 using the same installation. Isolated webviews and native operating-system menus
