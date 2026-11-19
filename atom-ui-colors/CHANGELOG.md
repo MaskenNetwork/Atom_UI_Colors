@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.2
+
+- Update the Marketplace description with automatic uninstall instructions and an explanation of VS Code's integrity warning.
+- Remove the search screenshot.
+- Fix verified build lookup for application paths containing directory links, including macOS temporary paths.
+
 ## 0.2.1
 
 - Remove applied colors automatically when uninstall is detected, with a Reload Window prompt.
