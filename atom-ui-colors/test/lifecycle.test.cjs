@@ -74,6 +74,17 @@ test('apply preserves the original CSP, settings and file theme without Loader a
   assert(!manifest.extensionDependencies?.includes('be5invis.vscode-custom-css'));
 });
 
+test('apply and restore support an application root reached through a directory link',async t=>{
+  const h=harness(t),linkedRoot=path.join(h.root,'linked-app');
+  fs.symlinkSync(h.appRoot,linkedRoot,process.platform==='win32'?'junction':'dir');
+  h.vscode.env.appRoot=linkedRoot;
+  assert((await h.controller.apply()).changed);
+  assert.equal(h.controller.getState().identity.root,fs.realpathSync(h.appRoot));
+  assert(fs.readFileSync(h.htmlPath,'utf8').includes('ATOM-UI-COLORS:BEGIN'));
+  await h.controller.restore();
+  assert.equal(fs.readFileSync(h.htmlPath,'utf8'),h.original);
+});
+
 test('Atom UI Colors settings drive Codicon and view overrides and survive restore',async t=>{
   const initial=JSON.stringify({'workbench.iconTheme':'material-icon-theme','atomUIColors.colors':{'search-view-icon':'#123456'},'atomUIColors.viewColors':{angular:'#654321'}},null,2)+'\n';
   const h=harness(t,{initial});

@@ -14,7 +14,9 @@ function identity(appRoot) {
   return {root,version:manifest.version,commit:product.commit,platform:process.platform,arch:process.arch};
 }
 function baselineFor(id,htmlPath) {
-  const relative=path.relative(id.root,htmlPath).replaceAll('\\','/');
+  // identity() resolves the application root; resolve the file as well so
+  // directory links (including macOS /var -> /private/var) share that root.
+  const relative=path.relative(id.root,fs.realpathSync(htmlPath)).replaceAll('\\','/');
   const item=baselines.builds.find(item=>item.version===id.version && item.commit===id.commit && item.platform===id.platform && item.arch===id.arch && item.relativePath===relative);
   if(!item || workbench.digest(item.html)!==item.sha256) throw new Error('This VS Code build has no verified CSP baseline. No application files were changed.');
   const product=storage.readJSON(path.join(id.root,'product.json'));
