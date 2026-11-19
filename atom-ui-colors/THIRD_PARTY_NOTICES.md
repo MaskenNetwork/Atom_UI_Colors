@@ -60,3 +60,11 @@ The downloaded npm archive SHA-256 was:
 The extension's own source remains MIT licensed; the renderer's original files
 retain their MPL-2.0 terms. SVG analysis works offline and needs no native binary
 for a particular operating system or processor.
+
+The verified workbench HTML baselines in `assets/workbench-baselines.json` are
+from Microsoft Visual Studio Code 1.147.0. Copyright (C) Microsoft Corporation.
+The upstream workbench source is part of the MIT-licensed vscode repository:
+https://github.com/microsoft/vscode
+https://github.com/microsoft/vscode/blob/main/LICENSE.txt
+The original copyright comment is retained. These baseline records are data;
+no Microsoft application script or Loader script is shipped or injected by them.
