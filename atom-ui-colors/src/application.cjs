@@ -13,14 +13,26 @@ function identity(appRoot) {
   if(!product?.commit || !manifest?.version) throw new Error('Cannot identify the VS Code distribution.');
   return {root,version:manifest.version,commit:product.commit,platform:process.platform,arch:process.arch};
 }
-function baselineFor(id,htmlPath) {
+function baselineFor(id,htmlPath,known) {
   // identity() resolves the application root; resolve the file as well so
   // directory links (including macOS /var -> /private/var) share that root.
   const relative=path.relative(id.root,fs.realpathSync(htmlPath)).replaceAll('\\','/');
-  const item=baselines.builds.find(item=>item.version===id.version && item.commit===id.commit && item.platform===id.platform && item.arch===id.arch && item.relativePath===relative);
-  if(!item || workbench.digest(item.html)!==item.sha256) throw new Error('This VS Code build has no verified CSP baseline. No application files were changed.');
+  let item=baselines.builds.find(item=>item.version===id.version && item.commit===id.commit && item.platform===id.platform && item.arch===id.arch && item.relativePath===relative);
+  if(item && workbench.digest(item.html)!==item.sha256) throw new Error('Bundled workbench baseline is damaged. Reinstall Atom UI Colors.');
   const product=storage.readJSON(path.join(id.root,'product.json'));
   const checksum=product.checksums?.[relative.replace(/^out\//,'')];
+  if(!item) {
+    // Verify other builds against their installed distribution checksum. After
+    // patching, reuse only a saved original for this exact installation, and
+    // recheck it against product.json on every apply/restore.
+    const saved=known?.schema===2 && sameIdentity(known.identity,id) && path.resolve(known.htmlPath)===path.resolve(htmlPath);
+    const html=saved?known.baseline:read(htmlPath);
+    const sha256=typeof html==='string'?workbench.digest(html):null;
+    if(!sha256 || !checksum || checksum!==Buffer.from(sha256,'hex').toString('base64').replace(/=+$/,'')) {
+      throw new Error(`VS Code ${id.version} (${id.commit}, ${id.platform}-${id.arch}) has no verified CSP baseline: the original workbench could not be verified against its distribution checksum. Restore or reinstall VS Code to recover its original application files, then retry Apply / Repair Colors. No application files were changed.`);
+    }
+    item={...id,relativePath:relative,html,sha256};
+  }
   if(checksum!==Buffer.from(item.sha256,'hex').toString('base64').replace(/=+$/,'')) throw new Error('Distribution checksum does not match the verified workbench baseline.');
   workbench.assertInline(item.html);
   return item;
@@ -70,8 +82,9 @@ function recover(base,owner) {
 }
 function apply({base,paths,settingsPath,htmlPath,appRoot,owner,css,hook}) {
   recover(base,owner);
-  const id=identity(appRoot), baseline=baselineFor(id,htmlPath), before=read(htmlPath), old=storage.readJSON(paths.statePath);
+  const id=identity(appRoot), before=read(htmlPath), old=storage.readJSON(paths.statePath);
   const appStatePath=path.join(base,'applications',storage.hash(JSON.stringify({...id,htmlPath})).slice(0,24)+'.json');
+  const baseline=baselineFor(id,htmlPath,storage.readJSON(appStatePath));
   let clean=before, migrated=false;
   const raw=read(settingsPath), parsed=settings.parse(raw??'{}');
   const hasPolicy=workbench.tags(before).some(t=>t.name==='meta' && t.attrs['http-equiv']?.toLowerCase()==='content-security-policy');
@@ -98,7 +111,7 @@ function restoredHTML(app,token) {
   if(!fs.existsSync(app.htmlPath))return null;
   const currentId=identity(app.identity.root);
   if(!sameIdentity(currentId,app.identity)) return null; // Never copy an older build over an update.
-  const baseline=baselineFor(currentId,app.htmlPath), current=read(app.htmlPath);
+  const baseline=baselineFor(currentId,app.htmlPath,app), current=read(app.htmlPath);
   if(baseline.sha256!==app.baselineSha256) throw new Error('Recovery baseline identity mismatch.');
   workbench.assertBaseline(current,baseline.html);
   return workbench.remove(current,token);
