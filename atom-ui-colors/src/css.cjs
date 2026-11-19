@@ -82,6 +82,7 @@ function stripStyles(html, token) {
   return html.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, style => {
     const pattern = new RegExp(`/\\* ATOM-UI-COLORS:BEGIN (${matchToken}) \\*/[\\s\\S]*?/\\* ATOM-UI-COLORS:END \\1 \\*/\\r?\\n?`, 'g');
     const stripped = style.replace(pattern,'');
+    if(stripped===style) return style;
     return /^<style\b[^>]*>\s*<\/style>$/i.test(stripped) ? '' : stripped;
   });
 }

@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "verifiedOn": "2026-11-19",
+  "loader751IndicatorSha256": "9bf104f2be0674b869b16378fa6882dd936b1b29abd4c84a251fdbd86801df36",
+  "builds": [
+    {
+      "version": "1.147.0",
+      "commit": "8a14f0cc1b08d531eb83255ea3764ae22aa932b5",
+      "platform": "win32",
+      "arch": "x64",
+      "relativePath": "out/vs/code/electron-browser/workbench/workbench.html",
+      "sha256": "7e0d9fb056cfc1badbe3e42374a27c4ea690322d4d6912455f2ecd312805f460",
+      "html": "<!-- Copyright (C) Microsoft Corporation. All rights reserved. -->\r\n<!DOCTYPE html>\r\n<html>\r\n\t<head>\r\n\t\t<meta charset=\"utf-8\" />\r\n\t\t<meta\r\n\t\t\thttp-equiv=\"Content-Security-Policy\"\r\n\t\t\tcontent=\"\r\n\t\t\t\tdefault-src\r\n\t\t\t\t\t'none'\r\n\t\t\t\t;\r\n\t\t\t\timg-src\r\n\t\t\t\t\t'self'\r\n\t\t\t\t\tdata:\r\n\t\t\t\t\tblob:\r\n\t\t\t\t\tvscode-remote-resource:\r\n\t\t\t\t\tvscode-managed-remote-resource:\r\n\t\t\t\t\thttps:\r\n\t\t\t\t;\r\n\t\t\t\tmedia-src\r\n\t\t\t\t\t'self'\r\n\t\t\t\t;\r\n\t\t\t\tframe-src\r\n\t\t\t\t\t'self'\r\n\t\t\t\t\tvscode-webview:\r\n\t\t\t\t;\r\n\t\t\t\tscript-src\r\n\t\t\t\t\t'self'\r\n\t\t\t\t\t'unsafe-eval'\r\n\t\t\t\t\tblob:\r\n\t\t\t\t;\r\n\t\t\t\tstyle-src\r\n\t\t\t\t\t'self'\r\n\t\t\t\t\t'unsafe-inline'\r\n\t\t\t\t;\r\n\t\t\t\tconnect-src\r\n\t\t\t\t\t'self'\r\n\t\t\t\t\thttps:\r\n\t\t\t\t\tws:\r\n\t\t\t\t;\r\n\t\t\t\tfont-src\r\n\t\t\t\t\t'self'\r\n\t\t\t\t\tvscode-remote-resource:\r\n\t\t\t\t\tvscode-managed-remote-resource:\r\n\t\t\t\t\thttps://*.vscode-unpkg.net\r\n\t\t\t\t;\r\n\t\t\t\trequire-trusted-types-for\r\n\t\t\t\t\t'script'\r\n\t\t\t\t;\r\n\t\t\t\ttrusted-types\r\n\t\t\t\t\tamdLoader\r\n\t\t\t\t\tcellRendererEditorText\r\n\t\t\t\t\tcollapsedCellPreview\r\n\t\t\t\t\tdefaultWorkerFactory\r\n\t\t\t\t\tdiffEditorWidget\r\n\t\t\t\t\tdiffReview\r\n\t\t\t\t\tdomLineBreaksComputer\r\n\t\t\t\t\tdompurify\r\n\t\t\t\t\tlit-html\r\n\t\t\t\t\teditorGhostText\r\n\t\t\t\t\teditorViewLayer\r\n\t\t\t\t\thtmlToMarkdown\r\n\t\t\t\t\tnotebookRenderer\r\n\t\t\t\t\tstickyScrollViewLayer\r\n\t\t\t\t\ttokenizeToString\r\n\t\t\t\t\tnotebookChatEditController\r\n\t\t\t\t\trichScreenReaderContent\r\n\t\t\t\t\tchatDebugTokenizer\r\n\t\t\t\t;\r\n\t\t\"/>\r\n\r\n\t\t<!-- Workbench CSS -->\r\n\t\t<link rel=\"stylesheet\" href=\"../../../workbench/workbench.desktop.main.css\">\r\n\t</head>\r\n\r\n\t<body aria-label=\"\">\r\n\t</body>\r\n\r\n\t<!-- Startup (do not modify order of script tags!) -->\r\n\t<script src=\"./workbench.js\" type=\"module\"></script>\r\n</html>\r\n",
+      "source": "https://update.code.visualstudio.com/commit:8a14f0cc1b08d531eb83255ea3764ae22aa932b5/win32-x64-archive/stable",
+      "archiveSha256": "42d65f18009959964d7cff8ca6f33149a195d52c08622821c8c681a08469c26e"
+    },
+    {
+      "version": "1.147.0",
+      "commit": "8a14f0cc1b08d531eb83255ea3764ae22aa932b5",
+      "platform": "linux",
+      "arch": "x64",
+      "relativePath": "out/vs/code/electron-browser/workbench/workbench.html",
+      "sha256": "272d9965dac310e2243551481909ede717e31077dcd1faa5be34272f1f15edc9",
+      "html": "<!-- Copyright (C) Microsoft Corporation. All rights reserved. -->\n<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<meta\n\t\t\thttp-equiv=\"Content-Security-Policy\"\n\t\t\tcontent=\"\n\t\t\t\tdefault-src\n\t\t\t\t\t'none'\n\t\t\t\t;\n\t\t\t\timg-src\n\t\t\t\t\t'self'\n\t\t\t\t\tdata:\n\t\t\t\t\tblob:\n\t\t\t\t\tvscode-remote-resource:\n\t\t\t\t\tvscode-managed-remote-resource:\n\t\t\t\t\thttps:\n\t\t\t\t;\n\t\t\t\tmedia-src\n\t\t\t\t\t'self'\n\t\t\t\t;\n\t\t\t\tframe-src\n\t\t\t\t\t'self'\n\t\t\t\t\tvscode-webview:\n\t\t\t\t;\n\t\t\t\tscript-src\n\t\t\t\t\t'self'\n\t\t\t\t\t'unsafe-eval'\n\t\t\t\t\tblob:\n\t\t\t\t;\n\t\t\t\tstyle-src\n\t\t\t\t\t'self'\n\t\t\t\t\t'unsafe-inline'\n\t\t\t\t;\n\t\t\t\tconnect-src\n\t\t\t\t\t'self'\n\t\t\t\t\thttps:\n\t\t\t\t\tws:\n\t\t\t\t;\n\t\t\t\tfont-src\n\t\t\t\t\t'self'\n\t\t\t\t\tvscode-remote-resource:\n\t\t\t\t\tvscode-managed-remote-resource:\n\t\t\t\t\thttps://*.vscode-unpkg.net\n\t\t\t\t;\n\t\t\t\trequire-trusted-types-for\n\t\t\t\t\t'script'\n\t\t\t\t;\n\t\t\t\ttrusted-types\n\t\t\t\t\tamdLoader\n\t\t\t\t\tcellRendererEditorText\n\t\t\t\t\tcollapsedCellPreview\n\t\t\t\t\tdefaultWorkerFactory\n\t\t\t\t\tdiffEditorWidget\n\t\t\t\t\tdiffReview\n\t\t\t\t\tdomLineBreaksComputer\n\t\t\t\t\tdompurify\n\t\t\t\t\tlit-html\n\t\t\t\t\teditorGhostText\n\t\t\t\t\teditorViewLayer\n\t\t\t\t\thtmlToMarkdown\n\t\t\t\t\tnotebookRenderer\n\t\t\t\t\tstickyScrollViewLayer\n\t\t\t\t\ttokenizeToString\n\t\t\t\t\tnotebookChatEditController\n\t\t\t\t\trichScreenReaderContent\n\t\t\t\t\tchatDebugTokenizer\n\t\t\t\t;\n\t\t\"/>\n\n\t\t<!-- Workbench CSS -->\n\t\t<link rel=\"stylesheet\" href=\"../../../workbench/workbench.desktop.main.css\">\n\t</head>\n\n\t<body aria-label=\"\">\n\t</body>\n\n\t<!-- Startup (do not modify order of script tags!) -->\n\t<script src=\"./workbench.js\" type=\"module\"></script>\n</html>\n",
+      "source": "https://update.code.visualstudio.com/commit:8a14f0cc1b08d531eb83255ea3764ae22aa932b5/linux-x64/stable",
+      "archiveSha256": "6fd8b14600f2a8ddb8b4833d8bf288f3dc4c34b2878d2c6c3fec7e16c81023bc"
+    },
+    {
+      "version": "1.147.0",
+      "commit": "8a14f0cc1b08d531eb83255ea3764ae22aa932b5",
+      "platform": "darwin",
+      "arch": "x64",
+      "relativePath": "out/vs/code/electron-browser/workbench/workbench.html",
+      "sha256": "272d9965dac310e2243551481909ede717e31077dcd1faa5be34272f1f15edc9",
+      "html": "<!-- Copyright (C) Microsoft Corporation. All rights reserved. -->\n<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<meta\n\t\t\thttp-equiv=\"Content-Security-Policy\"\n\t\t\tcontent=\"\n\t\t\t\tdefault-src\n\t\t\t\t\t'none'\n\t\t\t\t;\n\t\t\t\timg-src\n\t\t\t\t\t'self'\n\t\t\t\t\tdata:\n\t\t\t\t\tblob:\n\t\t\t\t\tvscode-remote-resource:\n\t\t\t\t\tvscode-managed-remote-resource:\n\t\t\t\t\thttps:\n\t\t\t\t;\n\t\t\t\tmedia-src\n\t\t\t\t\t'self'\n\t\t\t\t;\n\t\t\t\tframe-src\n\t\t\t\t\t'self'\n\t\t\t\t\tvscode-webview:\n\t\t\t\t;\n\t\t\t\tscript-src\n\t\t\t\t\t'self'\n\t\t\t\t\t'unsafe-eval'\n\t\t\t\t\tblob:\n\t\t\t\t;\n\t\t\t\tstyle-src\n\t\t\t\t\t'self'\n\t\t\t\t\t'unsafe-inline'\n\t\t\t\t;\n\t\t\t\tconnect-src\n\t\t\t\t\t'self'\n\t\t\t\t\thttps:\n\t\t\t\t\tws:\n\t\t\t\t;\n\t\t\t\tfont-src\n\t\t\t\t\t'self'\n\t\t\t\t\tvscode-remote-resource:\n\t\t\t\t\tvscode-managed-remote-resource:\n\t\t\t\t\thttps://*.vscode-unpkg.net\n\t\t\t\t;\n\t\t\t\trequire-trusted-types-for\n\t\t\t\t\t'script'\n\t\t\t\t;\n\t\t\t\ttrusted-types\n\t\t\t\t\tamdLoader\n\t\t\t\t\tcellRendererEditorText\n\t\t\t\t\tcollapsedCellPreview\n\t\t\t\t\tdefaultWorkerFactory\n\t\t\t\t\tdiffEditorWidget\n\t\t\t\t\tdiffReview\n\t\t\t\t\tdomLineBreaksComputer\n\t\t\t\t\tdompurify\n\t\t\t\t\tlit-html\n\t\t\t\t\teditorGhostText\n\t\t\t\t\teditorViewLayer\n\t\t\t\t\thtmlToMarkdown\n\t\t\t\t\tnotebookRenderer\n\t\t\t\t\tstickyScrollViewLayer\n\t\t\t\t\ttokenizeToString\n\t\t\t\t\tnotebookChatEditController\n\t\t\t\t\trichScreenReaderContent\n\t\t\t\t\tchatDebugTokenizer\n\t\t\t\t;\n\t\t\"/>\n\n\t\t<!-- Workbench CSS -->\n\t\t<link rel=\"stylesheet\" href=\"../../../workbench/workbench.desktop.main.css\">\n\t</head>\n\n\t<body aria-label=\"\">\n\t</body>\n\n\t<!-- Startup (do not modify order of script tags!) -->\n\t<script src=\"./workbench.js\" type=\"module\"></script>\n</html>\n",
+      "source": "https://update.code.visualstudio.com/commit:8a14f0cc1b08d531eb83255ea3764ae22aa932b5/darwin-universal/stable",
+      "archiveSha256": "0a5abeb8adb88f0fc631c4ffd780727a2dce0988ec52793f895281b74db1e2a0"
+    },
+    {
+      "version": "1.147.0",
+      "commit": "8a14f0cc1b08d531eb83255ea3764ae22aa932b5",
+      "platform": "darwin",
+      "arch": "arm64",
+      "relativePath": "out/vs/code/electron-browser/workbench/workbench.html",
+      "sha256": "272d9965dac310e2243551481909ede717e31077dcd1faa5be34272f1f15edc9",
+      "html": "<!-- Copyright (C) Microsoft Corporation. All rights reserved. -->\n<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<meta\n\t\t\thttp-equiv=\"Content-Security-Policy\"\n\t\t\tcontent=\"\n\t\t\t\tdefault-src\n\t\t\t\t\t'none'\n\t\t\t\t;\n\t\t\t\timg-src\n\t\t\t\t\t'self'\n\t\t\t\t\tdata:\n\t\t\t\t\tblob:\n\t\t\t\t\tvscode-remote-resource:\n\t\t\t\t\tvscode-managed-remote-resource:\n\t\t\t\t\thttps:\n\t\t\t\t;\n\t\t\t\tmedia-src\n\t\t\t\t\t'self'\n\t\t\t\t;\n\t\t\t\tframe-src\n\t\t\t\t\t'self'\n\t\t\t\t\tvscode-webview:\n\t\t\t\t;\n\t\t\t\tscript-src\n\t\t\t\t\t'self'\n\t\t\t\t\t'unsafe-eval'\n\t\t\t\t\tblob:\n\t\t\t\t;\n\t\t\t\tstyle-src\n\t\t\t\t\t'self'\n\t\t\t\t\t'unsafe-inline'\n\t\t\t\t;\n\t\t\t\tconnect-src\n\t\t\t\t\t'self'\n\t\t\t\t\thttps:\n\t\t\t\t\tws:\n\t\t\t\t;\n\t\t\t\tfont-src\n\t\t\t\t\t'self'\n\t\t\t\t\tvscode-remote-resource:\n\t\t\t\t\tvscode-managed-remote-resource:\n\t\t\t\t\thttps://*.vscode-unpkg.net\n\t\t\t\t;\n\t\t\t\trequire-trusted-types-for\n\t\t\t\t\t'script'\n\t\t\t\t;\n\t\t\t\ttrusted-types\n\t\t\t\t\tamdLoader\n\t\t\t\t\tcellRendererEditorText\n\t\t\t\t\tcollapsedCellPreview\n\t\t\t\t\tdefaultWorkerFactory\n\t\t\t\t\tdiffEditorWidget\n\t\t\t\t\tdiffReview\n\t\t\t\t\tdomLineBreaksComputer\n\t\t\t\t\tdompurify\n\t\t\t\t\tlit-html\n\t\t\t\t\teditorGhostText\n\t\t\t\t\teditorViewLayer\n\t\t\t\t\thtmlToMarkdown\n\t\t\t\t\tnotebookRenderer\n\t\t\t\t\tstickyScrollViewLayer\n\t\t\t\t\ttokenizeToString\n\t\t\t\t\tnotebookChatEditController\n\t\t\t\t\trichScreenReaderContent\n\t\t\t\t\tchatDebugTokenizer\n\t\t\t\t;\n\t\t\"/>\n\n\t\t<!-- Workbench CSS -->\n\t\t<link rel=\"stylesheet\" href=\"../../../workbench/workbench.desktop.main.css\">\n\t</head>\n\n\t<body aria-label=\"\">\n\t</body>\n\n\t<!-- Startup (do not modify order of script tags!) -->\n\t<script src=\"./workbench.js\" type=\"module\"></script>\n</html>\n",
+      "source": "https://update.code.visualstudio.com/commit:8a14f0cc1b08d531eb83255ea3764ae22aa932b5/darwin-universal/stable",
+      "archiveSha256": "0a5abeb8adb88f0fc631c4ffd780727a2dce0988ec52793f895281b74db1e2a0"
+    }
+  ]
+}
