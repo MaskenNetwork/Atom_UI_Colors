@@ -22,6 +22,31 @@ Hiding the notification only dismisses the warning; this customization remains
 unsupported by Microsoft. See the
 [VS Code integrity warning FAQ](https://code.visualstudio.com/docs/supporting/faq#_installation-appears-to-be-corrupt-unsupported).
 
+## Installation permissions
+
+Atom UI Colors needs permission to create and replace files in the **VS Code
+installation folder**, where it modifies `workbench.html`.
+
+On Windows:
+
+- **User Setup**, normally installed under
+  `%LOCALAPPDATA%\Programs\Microsoft VS Code`, is usually writable by your user
+  and allows the extension to work without administrator privileges.
+- **System Setup**, normally installed under `C:\Program Files\Microsoft VS Code`,
+  is usually protected. Applying colors can fail with `EPERM` or `EACCES` while
+  creating a `workbench.html.<id>.tmp` file. This indicates a filesystem access
+  restriction; the extension cannot bypass it.
+
+For a personal installation, use
+[VS Code User Setup](https://code.visualstudio.com/docs/setup/windows#choose-user-setup-or-system-setup)
+to keep the installation writable by your user. If you keep System Setup, close
+all VS Code instances, start VS Code with **Run as administrator**, then run
+**Atom UI Colors: Apply / Repair Colors** and choose **Reload Window**.
+You can return to normal launches afterward, but later color changes, automatic
+refreshes, reapplication after VS Code updates, restoration and uninstall cleanup
+also need write access and may require elevation again. On a managed computer,
+contact your administrator if these permissions are unavailable.
+
 ## Use
 
 Install the extension and choose **Reload Window** when prompted.

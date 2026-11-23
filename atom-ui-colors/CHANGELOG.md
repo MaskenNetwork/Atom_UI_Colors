@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.3
+
+- Clarify the installation write permissions required on Windows, including User Setup, System Setup and administrator access for protected installations.
+
 ## 0.2.2
 
 - Support compatible VS Code releases beyond the bundled build catalog by verifying the original workbench against its distribution checksum.
