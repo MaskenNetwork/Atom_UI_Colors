@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.4
+
+- Fix an uninstall observer startup race that could miss immediate removal and intermittently fail macOS lifecycle tests.
+
 ## 0.2.3
 
 - Clarify the installation write permissions required on Windows, including User Setup, System Setup and administrator access for protected installations.

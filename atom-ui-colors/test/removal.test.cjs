@@ -41,6 +41,17 @@ test('real metadata polling observes uninstall once, after stable evidence, with
   f.write(f.paths.obsolete,{[f.paths.folder]:true});await until(()=>calls===1);
   f.write(f.paths.obsolete,{[f.paths.folder]:true,unrelated:true});await pause(150);assert.equal(calls,1);
 });
+test('removal immediately after startup is detected without file-change notifications',async t=>{
+  // A native watcher can take its first asynchronous snapshot after both writes,
+  // so no later stat change exists to notify the observer about this removal.
+  t.mock.method(fs,'watchFile',()=>{});
+  t.mock.method(fs,'unwatchFile',()=>{});
+  const f=fixture(t);let calls=0;
+  const observer=observeRemoval({...f,id,interval:20,settle:60,onRemoval:confirmed=>{assert(confirmed());calls++;}});
+  t.after(()=>observer.dispose());
+  f.write(f.paths.obsolete,{[f.paths.folder]:true});f.write(f.paths.profile,[]);
+  await until(()=>calls===1);
+});
 test('updates and transient or malformed index rewrites do not trigger cleanup',async t=>{
   const f=fixture(t);let calls=0;
   const observer=observeRemoval({...f,id,interval:20,settle:100,onRemoval:()=>calls++});t.after(()=>observer.dispose());

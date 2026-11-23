@@ -39,8 +39,7 @@ function removalEvidence(paths,id) {
 }
 function observeRemoval({extensionPath,settingsPath,id,onRemoval,output,interval=1000,settle=1000}) {
   const paths=metadataPaths(extensionPath,settingsPath);
-  let disposed=false,running=false,seenInstalled=false,timer,fingerprint;
-  const watchers=[];
+  let disposed=false,running=false,seenInstalled=false,timer,pollTimer,fingerprint;
   const confirmed=()=>seenInstalled && removalEvidence(paths,id)!==null;
   function check() {
     if(disposed || running)return;
@@ -63,15 +62,16 @@ function observeRemoval({extensionPath,settingsPath,id,onRemoval,output,interval
     },settle);
     timer.unref?.();
   }
-  function dispose() {disposed=true;clearTimeout(timer);for(const [file,listener] of watchers)fs.unwatchFile(file,listener);}
+  function dispose() {disposed=true;clearTimeout(timer);clearInterval(pollTimer);}
   if(!paths.profile) {
     output?.appendLine('Early uninstall cleanup unavailable for this profile layout; the complete-uninstall hook remains available.');
     return {dispose,confirmed:()=>false};
   }
-  for(const file of [paths.profile,paths.obsolete]) {
-    const listener=()=>check();
-    fs.watchFile(file,{interval,persistent:false},listener);watchers.push([file,listener]);
-  }
+  // Native stat watchers establish their initial snapshot asynchronously. A
+  // removal before that snapshot can be missed forever without another write.
+  // Check the evidence itself periodically, within this extension host only.
+  pollTimer=setInterval(check,interval);
+  pollTimer.unref?.();
   check();
   return {dispose,confirmed};
 }
