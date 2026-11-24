@@ -70,6 +70,25 @@ user settings:
 their view or view container IDs.
 Set `atomUIColors.enabled` to `false`, then **Reload Window**, to turn the colors off.
 
+Automatic activity bar icon colors are adjusted to reach at least **3:1 contrast**
+against verified theme backgrounds. Readable colors stay unchanged; other colors
+are lightened or darkened while preserving their hue where possible. Explicit
+`colors` and `viewColors` overrides keep the exact color you chose.
+
+Backgrounds are read from JSONC themes (including `include` files) and
+`workbench.colorCustomizations`, including theme-specific overrides. CSS checks
+the current window's theme tokens before using a correction, so a different
+window or a theme change cannot reuse a correction for a different background.
+When the background or an active/hover overlay cannot be verified, icons use the
+theme's foreground for that state. This can also happen with unsupported theme
+formats or layouts. Custom CSS that paints backgrounds independently of VS Code's
+theme tokens is outside this check.
+
+Set `atomUIColors.activityBarContrast` to `false`, then **Reload Window**, to use
+the original automatic colors. The contrast feature uses CSS only and does not
+change the Content Security Policy. Icons outside the activity bar retain their
+existing color behavior; disabled icons and high-contrast themes keep their defaults.
+
 ![Color settings](https://raw.githubusercontent.com/MaskenNetwork/Atom_UI_Colors/main/atom-ui-colors/media/screenshots/03-settings.png)
 
 ## Requirements

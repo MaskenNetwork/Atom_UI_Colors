@@ -74,6 +74,28 @@ test('apply preserves the original CSP, settings and file theme without Loader a
   assert(!manifest.extensionDependencies?.includes('be5invis.vscode-custom-css'));
 });
 
+test('contrast theme resolution and disabling retain the exact original CSP and scripts', async t=>{
+  const h=harness(t);
+  const themePath=path.join(h.root,'theme.json');
+  fs.writeFileSync(themePath,'{"colors":{"activityBar.background":"#123456","activityBar.activeBackground":"#ffffff22"}}');
+  h.vscode.extensions.all=[{id:'test.theme',extensionPath:h.root,packageJSON:{contributes:{themes:[{id:'Test Theme',path:'theme.json'}]}}}];
+  fs.writeFileSync(h.settingsPath,JSON.stringify({'workbench.colorTheme':'Test Theme'}));
+  await h.controller.apply();
+  let css=fs.readFileSync(h.controller.paths.cssPath,'utf8');
+  assert(css.includes('style(--vscode-activityBar-background: #123456)'));
+  assert(css.includes('style(--vscode-activityBar-activeBackground: rgba(255, 255, 255, 0.13))'));
+  const scripts=html=>workbench.tags(html).filter(tag=>tag.name==='script').map(tag=>tag.raw+tag.content);
+  let html=fs.readFileSync(h.htmlPath,'utf8');
+  assert.deepEqual(workbench.policies(html).meta.map(tag=>tag.raw),workbench.policies(h.original).meta.map(tag=>tag.raw));
+  assert.deepEqual(scripts(html),scripts(h.original));
+  fs.writeFileSync(h.settingsPath,JSON.stringify({'workbench.colorTheme':'Test Theme','atomUIColors.activityBarContrast':false}));
+  await h.controller.apply();css=fs.readFileSync(h.controller.paths.cssPath,'utf8');
+  assert(!css.includes('@container'));assert(!css.includes('--atom-ui-colors-contrast-'));
+  html=fs.readFileSync(h.htmlPath,'utf8');
+  assert.deepEqual(workbench.policies(html).meta.map(tag=>tag.raw),workbench.policies(h.original).meta.map(tag=>tag.raw));
+  assert.deepEqual(scripts(html),scripts(h.original));
+});
+
 test('apply and restore support an application root reached through a directory link',async t=>{
   const h=harness(t),linkedRoot=path.join(h.root,'linked-app');
   fs.symlinkSync(h.appRoot,linkedRoot,process.platform==='win32'?'junction':'dir');
@@ -196,14 +218,14 @@ test('restore and complete uninstall reproduce the original settings and HTML ex
 
 test('installed extension events update SVG colors, coalesce bursts and respect Restore/disabled state',async t=>{
   const h=harness(t), commands=new Map(), errors=[];
-  let extensionEvent, themeEvent;
+  let extensionEvent, themeEvent, configurationEvent;
   const disposable=()=>({dispose:()=>{}});
   h.vscode.extensions.all=[];
   h.vscode.extensions.onDidChange=callback=>{extensionEvent=callback;return disposable();};
   h.vscode.window={activeColorTheme:{kind:2},createOutputChannel:()=>({appendLine:()=>{},show:()=>{},dispose:()=>{}}),
     onDidChangeActiveColorTheme:callback=>{themeEvent=callback;return disposable();},
     showErrorMessage:async message=>{errors.push(message);},showInformationMessage:async()=>undefined};
-  h.vscode.workspace.onDidChangeConfiguration=disposable;
+  h.vscode.workspace.onDidChangeConfiguration=callback=>{configurationEvent=callback;return disposable();};
   const originalExecute=h.vscode.commands.executeCommand;
   h.vscode.commands.registerCommand=(id,handler)=>{commands.set(id,handler);return disposable();};
   h.vscode.commands.executeCommand=async id=>commands.has(id)?commands.get(id)():originalExecute(id);
@@ -223,18 +245,29 @@ test('installed extension events update SVG colors, coalesce bursts and respect 
   };
   extensionEvent();extensionEvent();extensionEvent();
   await settle(()=>(h.count||0)===2);
-  assert(fs.readFileSync(controller.paths.cssPath,'utf8').includes('background-color: #d97757 !important'));
+  assert(fs.readFileSync(controller.paths.cssPath,'utf8').includes('background-color: var(--atom-ui-colors-contrast-d97757, #d97757) !important'));
   await commands.get('atomUIColors.status')(); // Drain the operation's state writes.
   await new Promise(resolve=>setTimeout(resolve,300));assert.equal((h.count||0),2);
   fs.writeFileSync(svgPath,'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path fill="#abcdef" d="M0 0h24v24H0z"/></svg>');
   extensionEvent();await settle(()=>(h.count||0)===3);
-  assert(fs.readFileSync(controller.paths.cssPath,'utf8').includes('background-color: #abcdef !important'));
+  assert(fs.readFileSync(controller.paths.cssPath,'utf8').includes('background-color: var(--atom-ui-colors-contrast-abcdef, #abcdef) !important'));
   h.vscode.extensions.all=[];extensionEvent();await settle(()=>(h.count||0)===4);
   assert(!fs.readFileSync(controller.paths.cssPath,'utf8').includes('activity-workbench-view-extension-new-extension-view-'));
   themeEvent();await new Promise(resolve=>setTimeout(resolve,400));assert.equal((h.count||0),4);
+  fs.writeFileSync(h.settingsPath,JSON.stringify({'workbench.colorCustomizations':{'activityBar.background':'#123456'}}));
+  configurationEvent({affectsConfiguration:key=>key==='workbench.colorCustomizations'});
+  await settle(()=>(h.count||0)===5);
+  assert(fs.readFileSync(controller.paths.cssPath,'utf8').includes('style(--vscode-activityBar-background: #123456)'));
+  fs.writeFileSync(h.settingsPath,JSON.stringify({'atomUIColors.enabled':false}));
+  configurationEvent({affectsConfiguration:key=>key==='atomUIColors'});
+  await settle(()=>!fs.existsSync(controller.paths.cssPath));
+  extensionEvent();themeEvent();await new Promise(resolve=>setTimeout(resolve,400));assert.equal((h.count||0),5);
+  fs.writeFileSync(h.settingsPath,'{}');
+  configurationEvent({affectsConfiguration:key=>key==='atomUIColors'});
+  await settle(()=>(h.count||0)===6);
   await commands.get('atomUIColors.restore')();
   extensionEvent();themeEvent();await new Promise(resolve=>setTimeout(resolve,400));
-  assert.equal((h.count||0),4);assert(!fs.existsSync(controller.paths.cssPath));
+  assert.equal((h.count||0),6);assert(!fs.existsSync(controller.paths.cssPath));
   assert.deepEqual(errors,[]);
 });
 test('later user settings, comments and CSS imports survive uninstall',async t=>{

@@ -4,6 +4,7 @@ const path = require('node:path');
 const storage = require('./storage.cjs');
 const {renderCSS} = require('./css.cjs');
 const {discoverIcons} = require('./icons.cjs');
+const {resolveThemeColors} = require('./theme.cjs');
 const PALETTE = require('../assets/palette.json');
 const application = require('./application.cjs');
 const {observeRemoval}=require('./removal.cjs');
@@ -24,7 +25,8 @@ function createController(vscode, context, options = {}) {
       const htmlPath=storage.locateWorkbench(appRoot);
       const appearance=vscode.workspace.getConfiguration('atomUIColors');
       const discovered=await discoverIcons(vscode,{appRoot,output});
-      const css=renderCSS(PALETTE,{colors:appearance.get('colors',{}),viewColors:appearance.get('viewColors',{}),aliases:discovered.aliases,detectedViews:discovered.viewColors,resources:discovered.resources,token:paths.token});
+      const activityBarTheme=appearance.get('activityBarContrast',true)?await resolveThemeColors(vscode,{output}):null;
+      const css=renderCSS(PALETTE,{colors:appearance.get('colors',{}),viewColors:appearance.get('viewColors',{}),aliases:discovered.aliases,detectedViews:discovered.viewColors,resources:discovered.resources,activityBarTheme,token:paths.token});
       const result=application.apply({base,paths,settingsPath,htmlPath,appRoot,owner:path.dirname(context.extensionPath),css,hook:options.hook});
       output.appendLine(result.changed?'CSS written with the verified original CSP unchanged. Reload Window to load the new HTML and policy.':'Already applied; no files changed.');
       if(result.preservedLegacyStyles) output.appendLine('Foreign legacy CSS was preserved. Restore removes only Atom UI Colors; these other styles may keep their own colors. Loader imports remain except our URL; do not run its patch commands, which remove CSP again.');
@@ -116,6 +118,7 @@ async function activate(context, injectedVscode) {
     vscode.commands.registerCommand('atomUIColors.status',()=>{output.appendLine(JSON.stringify({version:context.extension.packageJSON.version,diskPolicyOnly:true,reloadRequired:'Reload is needed after writes; disk state does not prove the loaded page policy.',state:controller.getState()},null,2));output.show();}),
     vscode.workspace.onDidChangeConfiguration(event=>{
       if(event.affectsConfiguration('atomUIColors')) void run(()=>{if(removed)return {changed:false};const config=vscode.workspace.getConfiguration('atomUIColors');return config.get('enabled',true)?(controller.getState()?.paused?{changed:false}:controller.apply()):controller.restore(false);},true);
+      else if(event.affectsConfiguration('workbench.colorTheme') || event.affectsConfiguration('workbench.colorCustomizations')) refresh();
     }),
   );
   if(vscode.workspace.getConfiguration('atomUIColors').get('enabled',true)) {

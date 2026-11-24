@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.5
+
+- Improve automatic activity bar icon colors to reach at least 3:1 contrast against verified backgrounds, preserving hue where possible.
+- Use the current theme's foreground when backgrounds or state overlays cannot be verified, including after a theme change and in other windows.
+- Read JSONC theme includes and global/theme-specific color customizations; preserve explicit icon color overrides.
+- Add an Activity Bar Contrast setting. Keep the original CSP and the existing CSS-only integration unchanged.
+
 ## 0.2.4
 
 - Fix an uninstall observer startup race that could miss immediate removal and intermittently fail macOS lifecycle tests.

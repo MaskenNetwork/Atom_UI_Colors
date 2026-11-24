@@ -15,7 +15,7 @@
     "baseContentUrl": "https://github.com/MaskenNetwork/Atom_UI_Colors/blob/main/atom-ui-colors/",
     "baseImagesUrl": "https://raw.githubusercontent.com/MaskenNetwork/Atom_UI_Colors/main/atom-ui-colors/"
   },
-  "version": "0.2.4",
+  "version": "0.2.5",
   "preview": false,
   "icon": "media/icon.png",
   "galleryBanner": { "color": "#171c25", "theme": "dark" },
@@ -54,6 +54,7 @@
         "title": "Icon Colors",
         "order": 2,
         "properties": {
+          "atomUIColors.activityBarContrast": { "type": "boolean", "default": true, "scope": "machine", "order": 0, "description": "Improve automatic activity bar icon colors to reach 3:1 contrast against verified theme backgrounds. Use the theme foreground when the background cannot be verified. Explicit icon color overrides are preserved." },
           "atomUIColors.colors": { "type": "object", "default": {}, "scope": "machine", "order": 1, "additionalProperties": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }, "description": "Optional icon ID to #RRGGBB overrides, for example {\"search\": \"#80CBC4\"}." },
           "atomUIColors.viewColors": { "type": "object", "default": {}, "scope": "machine", "order": 2, "additionalProperties": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }, "description": "Optional extension view ID to #RRGGBB colors for SVG mask icons." }
         }
