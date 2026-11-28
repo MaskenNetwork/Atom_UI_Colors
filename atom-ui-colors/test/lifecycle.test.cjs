@@ -88,7 +88,7 @@ test('contrast theme resolution and disabling retain the exact original CSP and 
   let html=fs.readFileSync(h.htmlPath,'utf8');
   assert.deepEqual(workbench.policies(html).meta.map(tag=>tag.raw),workbench.policies(h.original).meta.map(tag=>tag.raw));
   assert.deepEqual(scripts(html),scripts(h.original));
-  fs.writeFileSync(h.settingsPath,JSON.stringify({'workbench.colorTheme':'Test Theme','atomUIColors.activityBarContrast':false}));
+  fs.writeFileSync(h.settingsPath,JSON.stringify({'workbench.colorTheme':'Test Theme','atomUIColors.activityBarContrast':false,'atomUIColors.statusBarContrast':false}));
   await h.controller.apply();css=fs.readFileSync(h.controller.paths.cssPath,'utf8');
   assert(!css.includes('@container'));assert(!css.includes('--atom-ui-colors-contrast-'));
   html=fs.readFileSync(h.htmlPath,'utf8');
@@ -105,6 +105,20 @@ test('apply and restore support an application root reached through a directory 
   assert(fs.readFileSync(h.htmlPath,'utf8').includes('ATOM-UI-COLORS:BEGIN'));
   await h.controller.restore();
   assert.equal(fs.readFileSync(h.htmlPath,'utf8'),h.original);
+});
+
+test('status bar and activity bar contrast can be enabled independently',async t=>{
+  const h=harness(t);
+  fs.writeFileSync(h.settingsPath,JSON.stringify({'atomUIColors.activityBarContrast':false}));
+  await h.controller.apply();
+  let css=fs.readFileSync(h.controller.paths.cssPath,'utf8');
+  assert(css.includes('/* Status bar contrast:'));
+  assert(!css.includes('/* Activity bar contrast:'));
+  fs.writeFileSync(h.settingsPath,JSON.stringify({'atomUIColors.statusBarContrast':false}));
+  await h.controller.apply();
+  css=fs.readFileSync(h.controller.paths.cssPath,'utf8');
+  assert(css.includes('/* Activity bar contrast:'));
+  assert(!css.includes('/* Status bar contrast:'));
 });
 
 function useUnbundledBuild(h,html=h.original) {

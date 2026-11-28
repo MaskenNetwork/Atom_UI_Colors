@@ -35,6 +35,23 @@ function renderActivityContrast(scope, colors, theme, fallback) {
   css += `${scope} ${top} ${item}:not(.checked):hover { --atom-ui-colors-fallback: var(--vscode-activityBarTop-foreground, var(--vscode-panelTitle-activeForeground, var(--vscode-icon-foreground, var(--vscode-foreground)))); }\n`;
 
   const declarations = new Map();
+  function overlays(id) {
+    // Modern UI registry defaults follow modernActivityBar.* -> modernTab.*
+    // -> list.*. Those resolved values aren't present in a theme's JSON.
+    // Every candidate is still checked against the live state token below;
+    // an unrecognized background must retain the theme foreground fallback.
+    const inherited = {
+      'modernActivityBarItem.activeBackground': ['modernActivityBar.activeBackground', 'modernTab.activeBackground', 'list.inactiveSelectionBackground'],
+      'modernActivityBarItem.hoverBackground': ['modernActivityBar.hoverBackground', 'modernTab.hoverBackground', 'list.hoverBackground'],
+    };
+    const defaults = {
+      'modernActivityBarItem.activeBackground': ['#37373d', '#e4e6f1'],
+      'modernActivityBarItem.hoverBackground': ['#2a2d2e', '#f0f0f0'],
+    };
+    const values = [theme[id], ...(inherited[id] || []).map(key => theme[key]), ...(defaults[id] || [])]
+      .map(parseHex).filter(Boolean);
+    return [...new Map(values.map(color => [cssColor(color), color])).values()];
+  }
   function rule(selector, condition, background) {
     let values = declarations.get(background);
     if (!values) {
@@ -49,12 +66,10 @@ function renderActivityContrast(scope, colors, theme, fallback) {
     if (hoverToken) {
       rule(`${normal}:not(:hover)`, condition, hexOf(background.rgb));
       rule(`${normal}:hover`, normalCondition, hexOf(background.rgb));
-      const hover = parseHex(theme[hoverToken]);
-      if (hover) rule(`${normal}:hover`, `${condition} and ${style(hoverToken, hover)}`, overlayColor(hover, background));
+      for (const hover of overlays(hoverToken)) rule(`${normal}:hover`, `${condition} and ${style(hoverToken, hover)}`, overlayColor(hover, background));
     } else rule(normal, condition, hexOf(background.rgb));
     rule(`${root} ${item}.checked`, `${condition} and ${missing(activeToken)}`, hexOf(background.rgb));
-    const active = parseHex(theme[activeToken]);
-    if (active) rule(`${root} ${item}.checked`, `${condition} and ${style(activeToken, active)}`, overlayColor(active, background));
+    for (const active of overlays(activeToken)) rule(`${root} ${item}.checked`, `${condition} and ${style(activeToken, active)}`, overlayColor(active, background));
   }
   // Candidates are never assumed to be defaults: every rule checks the actual
   // CSS variable. This also covers omitted registry defaults in built-in themes.

@@ -70,7 +70,7 @@ user settings:
 their view or view container IDs.
 Set `atomUIColors.enabled` to `false`, then **Reload Window**, to turn the colors off.
 
-Automatic activity bar icon colors are adjusted to reach at least **3:1 contrast**
+Automatic activity bar and status bar icon colors are adjusted to reach at least **3:1 contrast**
 against verified theme backgrounds. Readable colors stay unchanged; other colors
 are lightened or darkened while preserving their hue where possible. Explicit
 `colors` and `viewColors` overrides keep the exact color you chose.
@@ -84,10 +84,18 @@ theme's foreground for that state. This can also happen with unsupported theme
 formats or layouts. Custom CSS that paints backgrounds independently of VS Code's
 theme tokens is outside this check.
 
-Set `atomUIColors.activityBarContrast` to `false`, then **Reload Window**, to use
-the original automatic colors. The contrast feature uses CSS only and does not
-change the Content Security Policy. Icons outside the activity bar retain their
-existing color behavior; disabled icons and high-contrast themes keep their defaults.
+The status bar includes the notification bell and checks its actual background
+in normal, debugging, empty and inactive windows. Hover and pressed backgrounds
+are checked separately. Special entries (warning, error, remote, offline and
+prominent), extension-painted backgrounds and unverified compact hover layers
+use their native foregrounds so their icons follow the item's own colors.
+
+Set `atomUIColors.activityBarContrast` or `atomUIColors.statusBarContrast` to
+`false`, then **Reload Window**, to use the original automatic colors in that bar.
+Both settings are enabled by default. The contrast feature uses CSS only and
+does not change the Content Security Policy. Icons outside these bars retain
+their existing color behavior; disabled icons and high-contrast themes keep
+their defaults. Explicit icon color overrides can fall below the contrast target.
 
 ![Color settings](https://raw.githubusercontent.com/MaskenNetwork/Atom_UI_Colors/main/atom-ui-colors/media/screenshots/03-settings.png)
 
@@ -125,4 +133,14 @@ Run **Atom UI Colors: Restore Previous Appearance**, then **Reload Window**.
 Automatic color application stays paused until you run
 **Atom UI Colors: Apply / Repair Colors**, then reload again.
 
-[Report an issue](https://github.com/MaskenNetwork/Atom_UI_Colors/issues)
+## Support the Project
+
+If you find this extension useful and would like to support me, consider making a donation.
+
+[![Donate via PayPal](https://img.shields.io/badge/Donate-PayPal-blue?style=for-the-badge&logo=paypal)](https://paypal.me/maskennetwork)
+
+## License
+
+Released under the [MIT License](https://github.com/MaskenNetwork/Atom_UI_Colors/blob/main/atom-ui-colors/LICENSE). See [Third-party notices](https://github.com/MaskenNetwork/Atom_UI_Colors/blob/main/atom-ui-colors/THIRD_PARTY_NOTICES.md) for component and asset licenses.
+
+[Source code on GitHub](https://github.com/MaskenNetwork/Atom_UI_Colors) · [Report an issue](https://github.com/MaskenNetwork/Atom_UI_Colors/issues)

@@ -109,13 +109,16 @@ test('browser applies guards per window, state and theme change', {skip:!process
     colors:{gear:'#010203'}, aliases:{'search-copy':'search'}, detectedViews:{test:'#000055'},
     viewColors:{manualView:'#010203'}, resources:[{path:'/icons/manual.svg',url:'data:image/svg+xml;base64,' + Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"><path d="M0 0h1v1H0z"/></svg>').toString('base64'), color:'#000055'}],
     activityBarTheme:{'activityBar.background':'#181818','activityBar.activeBackground':'#ffffff80','sideBar.background':'#181818',
-      'modernActivityBar.background':'#181818','modernActivityBar.inactiveBackground':'#181818','modernActivityBarItem.activeBackground':'#ffffff22'}
+      'modernActivityBar.background':'#181818','modernActivityBar.inactiveBackground':'#181818','modernActivityBarItem.activeBackground':'#ffffff22',
+      'list.hoverBackground':'#2c313a','list.inactiveSelectionBackground':'#323842'}
   });
   const file = path.join(root, 'fixture.html');
+  // A class has the same specificity as :hover and lets this dump-dom fixture
+  // deterministically exercise the generated hover selectors.
   fs.writeFileSync(file, `<!DOCTYPE html><meta charset="utf-8"><style>
     .monaco-workbench { --vscode-activityBar-background:#181818; --vscode-activityBar-foreground:#eeeeee; --vscode-activityBar-inactiveForeground:#aaaaaa; --vscode-icon-foreground:#bbbbbb; }
     .codicon::before {content:'X'; color:rgb(40,40,40)} .uri-icon {background-color:rgb(40,40,40)}
-    ${css}</style><div class="monaco-workbench vs-dark" id="dark"></div><div class="monaco-workbench vs-light" id="light" style="--vscode-activityBar-background:#ffffff"></div>
+    ${css.replaceAll(':hover', '.test-hover')}</style><div class="monaco-workbench vs-dark" id="dark"></div><div class="monaco-workbench vs-light" id="light" style="--vscode-activityBar-background:#ffffff"></div>
     <script>
     const failures=[];function check(ok,name){if(!ok)failures.push(name)};
     function rgb(id,pseudo){return getComputedStyle(document.querySelector(id),pseudo).color}
@@ -152,6 +155,27 @@ test('browser applies guards per window, state and theme change', {skip:!process
     item.classList.add('checked');
     dark.style.setProperty('--vscode-modernActivityBarItem-activeBackground','rgba(255, 255, 255, 0.13)');
     check(rgb('#glyph','::before')==='rgb(${parseHex(ensureContrast('#000055', '#363636')).rgb.join(', ')})','Modern UI selected overlay');
+    // VS Code 1.148 resolves these Modern UI tokens through modernTab.* and
+    // list.* registry aliases, even when the theme omits Modern UI colors.
+    dark.style.setProperty('--vscode-modernActivityBarItem-activeBackground','#323842');
+    check(rgb('#glyph','::before')==='rgb(${parseHex(ensureContrast('#000055', '#323842')).rgb.join(', ')})','Modern UI inherited selection background');
+    item.classList.remove('checked');item.classList.add('test-hover');
+    dark.style.setProperty('--vscode-modernActivityBarItem-hoverForeground','#eeeeee');
+    dark.style.setProperty('--vscode-modernActivityBarItem-hoverBackground','#2c313a');
+    const hoverColor='rgb(${parseHex(ensureContrast('#000055', '#2c313a')).rgb.join(', ')})';
+    check(rgb('#glyph','::before')===hoverColor,'Modern UI inherited hover background keeps icon hue');
+    check(bg('#test')===hoverColor,'Modern UI inherited hover background keeps SVG hue');
+    check(rgb('#manual','::before')==='rgb(1, 2, 3)','manual color survives Modern UI hover');
+    dark.style.setProperty('--vscode-modernActivityBarItem-hoverBackground','#abcdef');
+    check(rgb('#glyph','::before')==='rgb(238, 238, 238)','unverified hover still uses theme foreground');
+    dark.style.setProperty('--vscode-modernActivityBarItem-hoverBackground','#2a2d2e');
+    check(rgb('#glyph','::before')==='rgb(${parseHex(ensureContrast('#000055', '#2a2d2e')).rgb.join(', ')})','Modern UI registry hover default is verified');
+    dark.classList.add('focused');
+    check(rgb('#glyph','::before')==='rgb(${parseHex(ensureContrast('#000055', '#2a2d2e')).rgb.join(', ')})','Modern UI hover also works in focused windows');
+    item.classList.remove('test-hover');
+    item.classList.add('checked');
+    dark.style.setProperty('--vscode-modernActivityBarItem-activeBackground','#37373d');
+    check(rgb('#glyph','::before')==='rgb(${parseHex(ensureContrast('#000055', '#37373d')).rgb.join(', ')})','Modern UI registry selection default is verified');
     item.classList.remove('checked');dark.classList.remove('modern-ui');
     const topBar=document.createElement('div');topBar.className='part sidebar';topBar.style.setProperty('--vscode-sideBar-background','#181818');
     topBar.innerHTML='<div class="header-or-footer"><div class="composite-bar-container"><div class="composite-bar"><div class="action-item"><a class="codicon codicon-search" id="top-glyph"></a></div></div></div></div>';

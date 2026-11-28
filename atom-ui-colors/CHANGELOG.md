@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.6
+
+- Adjust automatic status bar icon colors, including the notification bell, to reach 3:1 contrast against verified light and dark backgrounds while preserving hue where possible.
+- Track the actual status bar background across debugging, empty and inactive windows; account for verified hover and active overlays.
+- Keep native item foregrounds for unknown or individually painted backgrounds, semantic status entries and compact hover layers. Preserve explicit icon overrides.
+- Add an independent Status Bar Contrast setting, enabled by default, with browser coverage for all palette icons and theme/state changes.
+
+- Keep automatic activity bar icon colors during Modern UI hover and selection when state backgrounds inherit from modernTab or list theme colors and registry defaults.
+- Verify inherited backgrounds against live CSS tokens before adjusting contrast; retain the theme foreground for unknown backgrounds and preserve explicit color overrides.
+
 ## 0.2.5
 
 - Improve automatic activity bar icon colors to reach at least 3:1 contrast against verified backgrounds, preserving hue where possible.

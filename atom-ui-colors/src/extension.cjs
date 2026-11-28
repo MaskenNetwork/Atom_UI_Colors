@@ -25,8 +25,9 @@ function createController(vscode, context, options = {}) {
       const htmlPath=storage.locateWorkbench(appRoot);
       const appearance=vscode.workspace.getConfiguration('atomUIColors');
       const discovered=await discoverIcons(vscode,{appRoot,output});
-      const activityBarTheme=appearance.get('activityBarContrast',true)?await resolveThemeColors(vscode,{output}):null;
-      const css=renderCSS(PALETTE,{colors:appearance.get('colors',{}),viewColors:appearance.get('viewColors',{}),aliases:discovered.aliases,detectedViews:discovered.viewColors,resources:discovered.resources,activityBarTheme,token:paths.token});
+      const activityBarContrast=appearance.get('activityBarContrast',true), statusBarContrast=appearance.get('statusBarContrast',true);
+      const theme=activityBarContrast || statusBarContrast?await resolveThemeColors(vscode,{output}):null;
+      const css=renderCSS(PALETTE,{colors:appearance.get('colors',{}),viewColors:appearance.get('viewColors',{}),aliases:discovered.aliases,detectedViews:discovered.viewColors,resources:discovered.resources,activityBarTheme:activityBarContrast?theme:null,statusBarTheme:statusBarContrast?theme:null,token:paths.token});
       const result=application.apply({base,paths,settingsPath,htmlPath,appRoot,owner:path.dirname(context.extensionPath),css,hook:options.hook});
       output.appendLine(result.changed?'CSS written with the verified original CSP unchanged. Reload Window to load the new HTML and policy.':'Already applied; no files changed.');
       if(result.preservedLegacyStyles) output.appendLine('Foreign legacy CSS was preserved. Restore removes only Atom UI Colors; these other styles may keep their own colors. Loader imports remain except our URL; do not run its patch commands, which remove CSP again.');
